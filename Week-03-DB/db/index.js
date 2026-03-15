@@ -1,7 +1,8 @@
+require("dotenv").config();
 const mongoose = require('mongoose');
-
+console.log(process.env.DB_PASS)
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://vineet:vineet29@cluster0.jwel223.mongodb.net/');
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jwel223.mongodb.net/`);
 
 // Define schemas
 const AdminSchema = new mongoose.Schema({
