@@ -6,10 +6,15 @@ const app = express();
 app.use(express.json());
 
 app.get("/todos", async (req, res) => {
-  const todo = await todo.find({});
-  res.status(200).json({
-    todo,
-  });
+  try {
+    const todos = await todo.find({});
+    res.status(200).json({
+      todos,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+  res.json({msg: "Error"})
 });
 
 /*
