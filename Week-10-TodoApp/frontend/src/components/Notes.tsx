@@ -1,11 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NotesCard from "./NotesCard";
 import { Archive, ScrollText, Trash2 } from "lucide-react";
-
-const notes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+import type { Note } from "../types/notes";
+import { getNotes } from "../apis/notesApis";
 
 export default function Notes() {
   const [notesFilter, setNotesFilter] = useState(1);
+  const [notes, setNotes] = useState<Note[]>([]);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadNotes();
+  }, []);
+
+  const loadNotes = async () => {
+    try {
+      const data = await getNotes();
+      console.log(data.data);
+      setNotes(data.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex-1 overflow-auto p-8">
@@ -47,9 +66,11 @@ export default function Notes() {
     grid-cols-[repeat(auto-fill,minmax(320px,1fr))]"
       >
         {/* // Create Note Card */}
-        {notes.map((i) => (
-          <NotesCard key={i} />
-        ))}
+        {loading ? (
+          <div>Loading</div>
+        ) : (
+          notes.map((note) => <NotesCard key={note.id} note={note} />)
+        )}
       </div>
     </div>
   );
